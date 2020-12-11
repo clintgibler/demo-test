@@ -330,6 +330,40 @@ def yaml_hammer():
 
     return render_template('view.html', name = json.dumps(ydata))
 
+# OK: does auth
+@app.route('/auth', methods = ['POST'])
+def auth():
+    token = request.headers.get('Authorization')
+    if not token:
+        return jsonify({'Error': 'Not Authenticated!'}),403
+    else:
+      return jsonify({'data': '...some info...'}), 200
+
+# OK: does auth
+@app.route('/also_auth', methods = ['GET', 'PUT'])
+def auth():
+    tok = request.headers.get('Authorization')
+    if not tok:
+        return jsonify({'Error': 'Not Authenticated!'}),403
+    else:
+      return jsonify({'data': '...some info...'}), 200
+
+# BAD: no auth
+# ruleid:flask-unauthenticated-routes
+@app.route('/unauth', methods = ['GET'])
+def unauth():
+    return jsonify({'ok': 'blurb!'}), 200
+
+# BAD: no auth
+# ruleid:flask-unauthenticated-routes
+@app.route('/other_unauth', methods = ['GET', 'POST'])
+def other_unauth():
+    print("Calling other_unauth route")
+    return jsonify({'ok': 'some text'}), 204
+
+# Not a route
+def foo():
+  print("foo")
 
 
 if __name__ == "__main__":
